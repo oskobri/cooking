@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\IngredientIndexRequest;
 use App\Http\Requests\IngredientStoreRequest;
 use App\Http\Resources\IngredientResource;
 use App\Models\Ingredient;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class IngredientController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(IngredientIndexRequest $request): AnonymousResourceCollection
     {
         $ingredients = Ingredient::query()
+            ->when($request->has('name'), fn(Builder $query) => $query->whereLike('name', '%' . $request->name . '%'))
             ->paginate();
 
         return IngredientResource::collection($ingredients);

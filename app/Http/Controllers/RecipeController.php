@@ -12,9 +12,7 @@ class RecipeController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $recipes = Recipe::query()
-            ->with(['ingredients'])
-            ->paginate();
+        $recipes = Recipe::query()->paginate();
 
         return RecipeResource::collection($recipes);
     }
@@ -28,6 +26,8 @@ class RecipeController extends Controller
 
     public function show(Recipe $recipe): RecipeResource
     {
+        $recipe->load(['ingredients']);
+
         return RecipeResource::make($recipe);
     }
 

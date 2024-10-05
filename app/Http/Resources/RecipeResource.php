@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class RecipeResource extends JsonResource
 {
@@ -12,6 +13,7 @@ class RecipeResource extends JsonResource
         return [
             'id' => $this->getKey(),
             'name' => $this->name,
+            'picture' => Storage::disk('public')->url('images/recipes/' . $this->picture),
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients'))
         ];
     }

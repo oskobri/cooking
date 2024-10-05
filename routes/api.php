@@ -7,5 +7,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('/recipes', RecipeController::class);
 Route::resource('/ingredients', IngredientController::class);
-Route::post('/ingredients/{ingredient}/recipes/{recipe}', [IngredientRecipeController::class, 'store']);
-Route::delete('/ingredients/{ingredient}/recipes/{recipe}', [IngredientRecipeController::class, 'destroy'])->scopeBindings();
+Route::post('/recipes/{recipe}/ingredients/{ingredient?}', [IngredientRecipeController::class, 'store']);
+Route::delete('/recipes/{recipe}/ingredients/{ingredient?}', [IngredientRecipeController::class, 'destroy'])->scopeBindings();
