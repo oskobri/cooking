@@ -13,4 +13,15 @@ enum IngredientUnit: string
     case g = 'g';
     case Kg = 'kg';
     case Botte = 'botte';
+
+    public static function findFromExternalUnit(?string $externalUnit = null): ?IngredientUnit
+    {
+        foreach(self::cases() as $case) {
+            if(strtolower(trim($case->value)) === strtolower($externalUnit)) {
+                return $case;
+            }
+        }
+
+        return null;
+    }
 }
