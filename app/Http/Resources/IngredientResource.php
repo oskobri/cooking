@@ -14,8 +14,8 @@ class IngredientResource extends JsonResource
             'name' => $this->name,
             'default_unit' => $this->default_unit,
             $this->mergeWhen($this->hasPivotLoaded('ingredient_recipe'), fn () => [
-                'quantity' => $this->pivot->quantity,
-                'unit' => $this->pivot->unit
+                'quantity' => $this->pivot->quantity == 0 ? null : $this->pivot->quantity,
+                'unit' => $this->default_unit ?? $this->pivot->unit
             ])
         ];
     }

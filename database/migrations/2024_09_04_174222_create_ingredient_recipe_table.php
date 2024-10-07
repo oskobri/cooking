@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('ingredient_id');
             $table->unsignedBigInteger('recipe_id');
-            $table->double('quantity')->nullable();
+            $table->decimal('quantity')->nullable();
             $table->string('unit')->nullable();
         });
     }

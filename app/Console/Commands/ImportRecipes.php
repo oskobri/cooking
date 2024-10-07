@@ -12,7 +12,7 @@ class ImportRecipes extends Command
 
     protected $description = 'Import recipes from config/import-recipes';
 
-    public function handle()
+    public function handle(): void
     {
         $recipes = config('import-recipes');
 

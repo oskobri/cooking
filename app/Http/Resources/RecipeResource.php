@@ -14,6 +14,8 @@ class RecipeResource extends JsonResource
             'id' => $this->getKey(),
             'name' => $this->name,
             'picture' => Storage::disk('public')->url('images/recipes/' . $this->picture),
+            'url' => $this->url,
+            'source' => $this->source,
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients'))
         ];
     }

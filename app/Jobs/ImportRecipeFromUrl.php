@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\IngredientUnit;
+use App\Enums\RecipeSource;
 use App\Models\Ingredient;
 use App\Models\Recipe;
 use App\Services\Ai\OpenAi;
@@ -10,6 +11,7 @@ use App\Services\DownloadImageFromUrl;
 use App\Services\Spiders\GenericBodySpider;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 use RoachPHP\Roach;
 use RoachPHP\Spider\Configuration\Overrides;
 
@@ -35,7 +37,15 @@ class ImportRecipeFromUrl implements ShouldQueue
             return;
         }
 
-        $recipe = Recipe::query()->firstOrCreate(['name' => $recipeData['name']]);
+        Log::info('Recette :' . $this->url, $recipeData);
+
+        $recipe = Recipe::query()->firstOrCreate(
+            [
+                'name' => $recipeData['name'],
+                'url' => $this->url,
+                'source' => RecipeSource::fromUrl($this->url)
+            ],
+        );
 
         if (!$recipe->wasRecentlyCreated) {
             return;
@@ -53,14 +63,18 @@ class ImportRecipeFromUrl implements ShouldQueue
 
         $ingredients = [];
 
-        foreach ($recipeData['ingredients'] as $ingredientData) {
-            $ingredient = Ingredient::query()
-                ->firstOrCreate([
-                    'name' => $ingredientData['name'],
-                ], [
-                    'default_unit' => IngredientUnit::findFromExternalUnit($ingredientData['unit']),
-                ]);
-            $ingredients[$ingredient->id] = ['quantity' => $this->extractNumber($ingredientData['quantity'])];
+        foreach (['ingredients', 'additional_ingredients'] as $ingredientKey) {
+            foreach ($recipeData[$ingredientKey] as $ingredientData) {
+                $ingredient = Ingredient::query()
+                    ->firstOrCreate(
+                        ['name' => $ingredientData['name']],
+                        ['default_unit' => IngredientUnit::findFromExternalUnit($ingredientData['unit'])]
+                    );
+                $ingredients[$ingredient->id] = [
+                    'quantity' => $this->extractNumber($ingredientData['quantity']),
+                    'unit' => IngredientUnit::findFromExternalUnit($ingredientData['unit']),
+                ];
+            }
         }
         $recipe->ingredients()->attach($ingredients);
     }
@@ -80,7 +94,7 @@ class ImportRecipeFromUrl implements ShouldQueue
         $ai = (new OpenAi);
         $ai->additionalParameters = $this->openAiResponseFormat();
 
-        $response = $ai->chat("Transforme ces informations au format json: $body");
+        $response = $ai->chat("Analyse ce document html. Récupère le nom et l'image de la recette, tous les ingrédients que tu trouves dans le html ainsi que les instructions. Il est possible qu'il y ait des ingrédients supplémentaires comme poivre, sel, vinaigre, huile d'olive, ...Des ingrédients qu'on pourrait avoir chez soi, je les veux aussi dans la liste des ingrédients supplémentaires. Voici le html: $body");
 
         return $response ? json_decode($response, true) : null;
     }
@@ -103,6 +117,29 @@ class ImportRecipeFromUrl implements ShouldQueue
                                 'type' => 'string',
                             ],
                             'ingredients' => [
+                                'type' => 'array',
+                                'items' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'name' => [
+                                            'type' => 'string',
+                                        ],
+                                        'quantity' => [
+                                            'type' => 'string',
+                                        ],
+                                        'unit' => [
+                                            'type' => 'string',
+                                        ],
+                                    ],
+                                    'required' => [
+                                        'name',
+                                        'quantity',
+                                        'unit',
+                                    ],
+                                    'additionalProperties' => false,
+                                ],
+                            ],
+                            'additional_ingredients' => [
                                 'type' => 'array',
                                 'items' => [
                                     'type' => 'object',
@@ -151,6 +188,7 @@ class ImportRecipeFromUrl implements ShouldQueue
                             'name',
                             'picture_url',
                             'ingredients',
+                            'additional_ingredients',
                             'instructions',
                             'total_time',
                             'preparation_time',
@@ -189,6 +227,6 @@ class ImportRecipeFromUrl implements ShouldQueue
 
         $result = str_replace(',', '.', $result);
 
-        return $result !== '0' ? (float) $result : null;
+        return $result !== '0' ? round((float) $result, 2) : null;
     }
 }
