@@ -19,7 +19,7 @@ class RecipeResource extends JsonResource
             'preparationTime' => $this->preparation_time,
             'totalTime' => $this->total_time,
             'kcal' => $this->kcal,
-            'instructions' => $this->when($this->instructions, $this->instructions),
+            'instructions' => $this->when($this->instructions, nl2br($this->instructions)),
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients'))
         ];
     }

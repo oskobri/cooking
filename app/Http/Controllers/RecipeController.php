@@ -19,16 +19,16 @@ class RecipeController extends Controller
         return RecipeResource::collection($recipes);
     }
 
-    public function store(RecipeStoreRequest $request): RecipeResource
+    public function show(Recipe $recipe): RecipeResource
     {
-        $recipe = Recipe::create($request->validated());
+        $recipe->load(['ingredients']);
 
         return RecipeResource::make($recipe);
     }
 
-    public function show(Recipe $recipe): RecipeResource
+    public function store(RecipeStoreRequest $request): RecipeResource
     {
-        $recipe->load(['ingredients']);
+        $recipe = Recipe::create($request->validated());
 
         return RecipeResource::make($recipe);
     }
