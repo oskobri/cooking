@@ -4,11 +4,13 @@ namespace App\Enums;
 
 enum IngredientUnit: string
 {
+    use Enumerable;
+
     case Soup_spoon = 'cs';
     case Coffee_spoon = 'cc';
     case Ml = 'ml';
     case Cl = 'cl';
-    case Dl = 'Dl';
+    case Dl = 'dl';
     case L = 'l';
     case g = 'g';
     case Kg = 'kg';

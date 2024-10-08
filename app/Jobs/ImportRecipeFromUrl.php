@@ -6,7 +6,7 @@ use App\Enums\IngredientUnit;
 use App\Enums\RecipeSource;
 use App\Models\Ingredient;
 use App\Models\Recipe;
-use App\Services\Ai\OpenAi;
+use App\Services\Ai\RecipeAi;
 use App\Services\DownloadImageFromUrl;
 use App\Services\Spiders\GenericBodySpider;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,19 +19,21 @@ class ImportRecipeFromUrl implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(private readonly string $url)
-    {
-    }
+    public function __construct(private readonly string $url) {}
 
     public function handle(): void
     {
+        if (Recipe::query()->where(['url' => $this->url])->exists()) {
+            return;
+        }
+
         $body = $this->getBodyFromUrl();
 
         if (!$body) {
             return;
         }
 
-        $recipeData = $this->getRecipeFromBody($body);
+        $recipeData = RecipeAi::getRecipeFromBody($body);
 
         if (!$recipeData) {
             return;
@@ -41,9 +43,15 @@ class ImportRecipeFromUrl implements ShouldQueue
 
         $recipe = Recipe::query()->firstOrCreate(
             [
-                'name' => $recipeData['name'],
                 'url' => $this->url,
                 'source' => RecipeSource::fromUrl($this->url)
+            ],
+            [
+                'name' => $recipeData['name'],
+                'preparation_time' => $recipeData['preparation_time'],
+                'total_time' => $recipeData['total_time'],
+                'kcal' => $recipeData['kcal'],
+                'instructions' => $recipeData['instructions'] ? implode("\n\n", array_column($recipeData['instructions'], 'details')) : null,
             ],
         );
 
@@ -87,117 +95,6 @@ class ImportRecipeFromUrl implements ShouldQueue
         );
 
         return $items[0]->get('body');
-    }
-
-    private function getRecipeFromBody(string $body): ?array
-    {
-        $ai = (new OpenAi);
-        $ai->additionalParameters = $this->openAiResponseFormat();
-
-        $response = $ai->chat("Analyse ce document html. Récupère le nom et l'image de la recette, tous les ingrédients que tu trouves dans le html ainsi que les instructions. Il est possible qu'il y ait des ingrédients supplémentaires comme poivre, sel, vinaigre, huile d'olive, ...Des ingrédients qu'on pourrait avoir chez soi, je les veux aussi dans la liste des ingrédients supplémentaires. Voici le html: $body");
-
-        return $response ? json_decode($response, true) : null;
-    }
-
-    private function openAiResponseFormat(): array
-    {
-        return [
-            'response_format' => [
-                'type' => 'json_schema',
-                'json_schema' => [
-                    'name' => 'recipe',
-                    'strict' => true,
-                    'schema' => [
-                        'type' => 'object',
-                        'properties' => [
-                            'name' => [
-                                'type' => 'string',
-                            ],
-                            'picture_url' => [
-                                'type' => 'string',
-                            ],
-                            'ingredients' => [
-                                'type' => 'array',
-                                'items' => [
-                                    'type' => 'object',
-                                    'properties' => [
-                                        'name' => [
-                                            'type' => 'string',
-                                        ],
-                                        'quantity' => [
-                                            'type' => 'string',
-                                        ],
-                                        'unit' => [
-                                            'type' => 'string',
-                                        ],
-                                    ],
-                                    'required' => [
-                                        'name',
-                                        'quantity',
-                                        'unit',
-                                    ],
-                                    'additionalProperties' => false,
-                                ],
-                            ],
-                            'additional_ingredients' => [
-                                'type' => 'array',
-                                'items' => [
-                                    'type' => 'object',
-                                    'properties' => [
-                                        'name' => [
-                                            'type' => 'string',
-                                        ],
-                                        'quantity' => [
-                                            'type' => 'string',
-                                        ],
-                                        'unit' => [
-                                            'type' => 'string',
-                                        ],
-                                    ],
-                                    'required' => [
-                                        'name',
-                                        'quantity',
-                                        'unit',
-                                    ],
-                                    'additionalProperties' => false,
-                                ],
-                            ],
-                            'instructions' => [
-                                'type' => 'array',
-                                'items' => [
-                                    'type' => 'object',
-                                    'properties' => [
-                                        'details' => [
-                                            'type' => 'string',
-                                        ],
-                                    ],
-                                    'required' => [
-                                        'details',
-                                    ],
-                                    'additionalProperties' => false,
-                                ],
-                            ],
-                            'total_time' => [
-                                'type' => 'string',
-                            ],
-                            'preparation_time' => [
-                                'type' => 'string',
-                            ]
-                        ],
-                        'required' => [
-                            'name',
-                            'picture_url',
-                            'ingredients',
-                            'additional_ingredients',
-                            'instructions',
-                            'total_time',
-                            'preparation_time',
-                        ],
-                        'additionalProperties' => false,
-                    ],
-                ],
-            ]
-        ];
     }
 
     /**
