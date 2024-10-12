@@ -8,17 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('ingredient_recipe', function (Blueprint $table) {
+        Schema::create('grocery_list_recipe', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('ingredient_id')->index();
+            $table->unsignedBigInteger('grocery_list_id')->index();
             $table->unsignedBigInteger('recipe_id')->index();
-            $table->decimal('quantity')->nullable();
-            $table->string('unit')->nullable();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('ingredient_recipe');
+        Schema::dropIfExists('grocery_list_recipe');
     }
 };

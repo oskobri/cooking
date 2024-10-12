@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RecipeStoreRequest;
+use App\Http\Resources\IngredientResource;
 use App\Http\Resources\RecipeResource;
 use App\Models\Recipe;
 use Illuminate\Http\JsonResponse;
@@ -13,6 +14,7 @@ class RecipeController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $recipes = Recipe::query()
+            ->select(['id', 'name', 'picture', 'preparation_time', 'total_time', 'kcal'])
             ->with(['ingredients'])
             ->paginate();
 
