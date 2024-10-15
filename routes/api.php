@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('/recipes', RecipeController::class);
 Route::resource('/ingredients', IngredientController::class);
+Route::get('/grocery-lists/last', [GroceryListController::class, 'last']);
 Route::resource('/grocery-lists', GroceryListController::class);
 
 Route::post('/recipes/{recipe}/ingredients/{ingredient?}', [IngredientRecipeController::class, 'store']);

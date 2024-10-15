@@ -23,21 +23,30 @@ class GroceryListController extends Controller
         return GroceryListResource::collection($groceryLists);
     }
 
-    public function store(GroceryListStoreRequest $request): GroceryListResource
-    {
-        $groceryList = GroceryList::query()->create($request->validated());
-
-        return GroceryListResource::make($groceryList);
-    }
-
     public function show(GroceryList $groceryList): GroceryListResource
     {
+        return GroceryListResource::make($groceryList->load('recipes.ingredients'));
+    }
+
+    public function last(): GroceryListResource
+    {
+        return GroceryListResource::make(GroceryList::query()->latest()->first());
+    }
+
+    public function store(GroceryListStoreRequest $request): GroceryListResource
+    {
+        $groceryList = GroceryList::query()->create($request->getInput());
+
+        $groceryList->recipes()->sync($request->recipes);
+
         return GroceryListResource::make($groceryList);
     }
 
     public function update(GroceryListUpdateRequest $request, GroceryList $groceryList): GroceryListResource
     {
         $groceryList->update($request->validated());
+
+        $groceryList->recipes()->sync($request->recipes);
 
         return GroceryListResource::make($groceryList->refresh());
     }
