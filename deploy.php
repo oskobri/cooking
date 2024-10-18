@@ -7,7 +7,9 @@ require 'recipe/laravel.php';
 
 set('repository', 'git@github.com:oskobri/cooking.git');
 
-add('shared_files', []);
+add('shared_files', [
+    'database/database.sqlite',
+]);
 add('shared_dirs', []);
 add('writable_dirs', []);
 
