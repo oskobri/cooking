@@ -11,6 +11,13 @@ class GroceryListUpdateRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'serving_count' => ['sometimes', 'integer'],
+            'recipes' => ['sometimes', 'array'],
+            'recipes.*' => ['sometimes', 'exists:recipes,id'],
         ];
+    }
+
+    public function getInput(): array
+    {
+        return $this->safe(['name', 'serving_count']);
     }
 }

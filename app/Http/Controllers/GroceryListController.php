@@ -44,11 +44,13 @@ class GroceryListController extends Controller
 
     public function update(GroceryListUpdateRequest $request, GroceryList $groceryList): GroceryListResource
     {
-        $groceryList->update($request->validated());
+        $groceryList->update($request->getInput());
 
-        $groceryList->recipes()->sync($request->recipes);
+        if($request->recipes) {
+            $groceryList->recipes()->sync($request->recipes);
+        }
 
-        return GroceryListResource::make($groceryList->refresh());
+        return GroceryListResource::make($groceryList->refresh()->load('recipes'));
     }
 
     public function destroy(GroceryList $groceryList): Response
