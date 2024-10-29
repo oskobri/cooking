@@ -17,7 +17,7 @@ class RecipeResource extends JsonResource
         return [
             'id' => $this->getKey(),
             'name' => $this->name,
-            'picture' => $this->when($this->picture, Storage::disk('public')->url('images/recipes/' . $this->picture)),
+            'picture' => $this->when($this->picture, Storage::disk('public')->url($this->picture)),
             'url' => $this->when($this->url, $this->url),
             'source' => $this->when($this->source, $this->source),
             'preparationTime' => $this->when($this->preparation_time, $this->preparation_time),

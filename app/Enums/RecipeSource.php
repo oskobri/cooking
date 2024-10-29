@@ -4,6 +4,8 @@ namespace App\Enums;
 
 enum RecipeSource: string
 {
+    use Enumerable;
+
     case HelloFresh = 'hellofresh';
 
     public static function fromUrl(string $url): ?RecipeSource

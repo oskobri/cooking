@@ -60,12 +60,13 @@ class ImportRecipeFromUrl implements ShouldQueue
         }
 
         if ($recipeData['picture_url']) {
+            (new DownloadImageFromUrl)(
+                'images/recipes/',
+                'recipe-' . $recipe->getkey(),
+                $recipeData['picture_url']
+            );
             $recipe->update([
-                'picture' => (new DownloadImageFromUrl)(
-                    'images/recipes/',
-                    'recipe-' . $recipe->getkey(),
-                    $recipeData['picture_url']
-                )
+                'picture' => 'images/recipes/recipe-' . $recipe->getkey()
             ]);
         }
 
