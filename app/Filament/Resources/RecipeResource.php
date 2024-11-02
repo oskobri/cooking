@@ -25,6 +25,7 @@ class RecipeResource extends Resource
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('picture')
+                    ->directory('images/recipes')
                     ->columnSpanFull(),
 
                 Forms\Components\TextInput::make('name')
