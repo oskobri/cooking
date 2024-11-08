@@ -16,7 +16,7 @@ class RecipeController extends Controller
         $recipes = Recipe::query()
             ->select(['id', 'name', 'picture', 'preparation_time', 'total_time', 'kcal'])
             ->with(['ingredients'])
-            ->orderBy($request->input('sort', 'id'))
+            ->orderBy($request->input('sort', 'id'), $request->input('sort_direction', 'asc'))
             ->paginate();
 
         return RecipeResource::collection($recipes);

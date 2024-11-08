@@ -60,13 +60,13 @@ class ImportRecipeFromUrl implements ShouldQueue
         }
 
         if ($recipeData['picture_url']) {
-            (new DownloadImageFromUrl)(
+            $fileName = (new DownloadImageFromUrl)(
                 'images/recipes/',
                 'recipe-' . $recipe->getkey(),
                 $recipeData['picture_url']
             );
             $recipe->update([
-                'picture' => 'images/recipes/recipe-' . $recipe->getkey()
+                'picture' => "images/recipes/$fileName"
             ]);
         }
 
@@ -96,5 +96,32 @@ class ImportRecipeFromUrl implements ShouldQueue
         );
 
         return $items[0]->get('body');
+    }
+
+    private function extractNumber($input): ?float
+    {
+        $replacements = [
+            '½' => '1/2',
+            '⅓' => '1/3',
+            '¼' => '1/4',
+            '¾' => '3/4',
+            '⅔' => '2/3',
+        ];
+
+        $input = str_replace(array_keys($replacements), array_values($replacements), $input);
+
+        // Keep only number, comma and /
+        $result = preg_replace('/[^0-9,.-\/]/', '', $input);
+
+        // Check if it's a fraction
+        if (preg_match('/(\d+)\/(\d+)/', $result, $matches)) {
+            $numerator = (float) $matches[1];
+            $denominator = (float) $matches[2];
+            $result = str_replace($matches[0], $numerator / $denominator, $result);
+        }
+
+        $result = str_replace(',', '.', $result);
+
+        return $result !== '0' ? round((float) $result, 2) : null;
     }
 }

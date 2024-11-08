@@ -1,7 +1,8 @@
 <?php
 
 return [
-    [
+    // Run 1
+/*    [
         "service" => "hello-fresh",
         "name" => "Burger veggie : portobello glacé au balsamique avec des oignons caramélisés & de l'aïoli",
         "url" => "https://www.hellofresh.fr/recipes/burger-veggie-portobello-glace-au-balsamique-63b4787edf3c42700f0807ff"
@@ -300,5 +301,133 @@ return [
         "service" => "hello-fresh",
         "name" => "Baos au porc & sauce asiatique sucrée",
         "url" => "https://www.hellofresh.fr/recipes/bao-au-porc-and-sauce-asiatique-sucree-64fb2e0532e9107c6db8893d"
+    ],*/
+
+    // Run 2
+    [
+        "service" => "hello-fresh",
+        "name" => "Wok de poulet au cumin façon Chuan'r",
+        "url" => "https://www.hellofresh.fr/recipes/wok-de-poulet-au-cumin-a-la-chinoise-66c59840ac0a1f91a3672bcc"
     ],
+    [
+        "service" => "hello-fresh",
+        "name" => "Penne & bœuf haché aux saveurs mexicaines",
+        "url" => "https://www.hellofresh.fr/recipes/penne-and-boeuf-hache-aux-saveurs-mexicaines-659bc7086b4bf2cf1c67fabb"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "Croque-monsieur jambon & crème de gouda",
+        "url" => "https://www.hellofresh.fr/recipes/croque-monsieur-jambon-and-creme-de-gouda-65dd9359a446647e0183bfd6"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/croque-rustique-poulet-and-huile-saveur-truffe-66c59840148d730f514f7552"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/notre-fameuse-blanquette-de-saumon-66c59838ac0a1f91a3672bb1"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/nouilles-au-boeuf-sautees-a-la-thai-66d0886ba3a9934710b372d7"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/bo-bun-vietnamien-au-poulet-and-nems-669e7006180815c79327627d"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/blanquette-de-poulet-reconfortante-66c5982f26a15d047a6078b8"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/burger-de-boeuf-au-zaatar-and-mayo-persillee-65e09b958eaa0461729eff73"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/poelee-de-poulet-pak-choi-and-sauce-chili-sucree-6564b1ab2d94ad532d620cd5"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/burritos-de-lavant-match-chorizo-and-poulet-66c5983b26a15d047a6078da"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/nouilles-sautees-au-boeuf-facon-yaki-udon-669e7005180815c793276274"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/bangers-and-colcannon-65e0f714acc901eff8e7cbd2"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/nouilles-sautees-portobello-and-sauce-cacahuetes-669e6ffd180815c793276257"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/les-fameuses-pates-carbo-a-la-francaise-669e6ff9180815c79327623f"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/hachis-parmentier-gourmand-de-boeuf-669e6fe944e4fbb9d2130783"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/poulet-and-sauce-blanche-a-laneth-66bc993811ecbd46e2d0292b"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/nouilles-au-boeuf-hache-facon-dan-dan-66043ab41cf16d0473f318fc"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/conchiglie-au-pesto-rouge-and-duo-de-fromages-6661bd3d44a1718e5e791124"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/miso-ramen-rapide-au-porc-and-soja-65cf17f469f9a536d428c8b4"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/lultimate-burger-gouda-and-oignons-confits-66052a195ce3cbf560d78c88"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/soupe-facon-miso-ramen-au-poulet-669e6fd344e4fbb9d2130738"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/one-pot-dorzo-au-poulet-and-herbes-de-provence-669e6fc8180815c7932761d3"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/salade-legere-de-nouilles-au-poulet-and-soja-669e6fce65ce5ed4b1f969fa"
+    ],
+    [
+        "service" => "hello-fresh",
+        "name" => "",
+        "url" => "https://www.hellofresh.fr/recipes/kare-udon-nouilles-veggie-au-curry-and-oeuf-64fb2d8d32e9107c6db88674"
+    ],
+
 ];

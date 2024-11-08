@@ -10,7 +10,8 @@ class RecipeIndexRequest extends FormRequest
     {
         return [
             'page' => ['nullable', 'integer'],
-            'sort' => ['nullable', 'in:kcal,preparation_time,total_time,name'],
+            'sort' => ['nullable', 'in:kcal,preparation_time,total_time,name,created_at'],
+            'sort_direction' => ['nullable', 'in:asc,desc'],
         ];
     }
 }
