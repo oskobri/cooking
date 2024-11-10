@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
+
 class UserController extends Controller
 {
-    public function me()
+    public function me(): UserResource
     {
-        return auth()->user();
+        return UserResource::make(auth()->user());
     }
 }

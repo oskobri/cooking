@@ -14,7 +14,7 @@ Route::resource('/recipes', RecipeController::class);
 Route::resource('/ingredients', IngredientController::class);
 
 Route::middleware(['auth:sanctum'])->group(function() {
-    Route::get('/me', [UserController::class, 'me']);
+    Route::get('/users/me', [UserController::class, 'me']);
     Route::get('/grocery-lists/last', [GroceryListController::class, 'last']);
     Route::resource('/grocery-lists', GroceryListController::class);
     Route::post('/recipes/{recipe}/ingredients/{ingredient?}', [IngredientRecipeController::class, 'store']);
