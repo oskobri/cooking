@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Recipe extends Model
@@ -27,6 +29,17 @@ class Recipe extends Model
         return $this->belongsToMany(Ingredient::class)
             ->withPivot(['quantity', 'unit'])
             ->orderBy('name');
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(RecipeRating::class);
+    }
+
+    public function userRating(): HasOne
+    {
+        return $this->hasOne(RecipeRating::class)
+            ->whereBelongsTo(auth()->user());
     }
 
     public function scopeAccessible(Builder $query): Builder

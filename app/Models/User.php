@@ -6,6 +6,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -56,5 +57,10 @@ class User extends Authenticatable implements FilamentUser
     public function groceryLists(): HasMany
     {
         return $this->hasMany(GroceryList::class);
+    }
+
+    public function latestGroceryList(): HasOne
+    {
+        return $this->hasOne(GroceryList::class)->latestOfMany();
     }
 }

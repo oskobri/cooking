@@ -6,16 +6,18 @@ use App\Http\Requests\GroceryListStoreRequest;
 use App\Http\Requests\GroceryListUpdateRequest;
 use App\Http\Resources\GroceryListResource;
 use App\Models\GroceryList;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Throwable;
 
 class GroceryListController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $groceryLists = GroceryList::query()
-            ->forMe()
+        $groceryLists = auth()->user()
+            ->groceryLists()
             ->with(['recipes:id,name,picture,preparation_time,total_time,kcal'])
             ->latest()
             ->paginate();
@@ -23,13 +25,18 @@ class GroceryListController extends Controller
         return GroceryListResource::collection($groceryLists);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function last(): GroceryListResource
     {
+        throw_if(
+            is_null(auth()->user()->latestGroceryList),
+            ModelNotFoundException::class
+        );
+
         return GroceryListResource::make(
-            GroceryList::query()
-                ->forMe()
-                ->latest()
-                ->firstOrFail()
+            auth()->user()->latestGroceryList
         );
     }
 

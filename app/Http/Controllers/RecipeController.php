@@ -17,7 +17,9 @@ class RecipeController extends Controller
         $recipes = Recipe::query()
             ->accessible()
             ->select(['id', 'name', 'picture', 'preparation_time', 'total_time', 'kcal', 'public', 'published'])
-            ->with(['ingredients'])
+            ->with(['ingredients', 'userRating'])
+            ->withAvg('ratings', 'rating')
+            ->withCount('ratings')
             ->orderBy(
                 $request->input('sort', $request->defaultSort()),
                 $request->input('sort_direction', $request->defaultSortDirection())
