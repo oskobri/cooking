@@ -33,7 +33,10 @@ class RecipeController extends Controller
     {
         Gate::authorize('view', $recipe);
 
-        $recipe->load(['ingredients']);
+        $recipe
+            ->load(['ingredients', 'userRating'])
+            ->loadAvg('ratings', 'rating')
+            ->loadCount('ratings');
 
         return RecipeResource::make($recipe);
     }
