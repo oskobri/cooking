@@ -17,6 +17,8 @@ class RecipeResource extends JsonResource
         return [
             'id' => $this->getKey(),
             'name' => $this->name,
+            'public' => $this->when($this->public, $this->public),
+            'published' => $this->when($this->published, $this->published),
             'picture' => $this->when($this->picture, Storage::disk('public')->url($this->picture)),
             'url' => $this->when($this->url, $this->url),
             'source' => $this->when($this->source, $this->source),
@@ -24,7 +26,7 @@ class RecipeResource extends JsonResource
             'totalTime' => $this->when($this->total_time, $this->total_time),
             'kcal' => $this->when($this->kcal, $this->kcal),
             'instructions' => $this->when($this->instructions, nl2br($this->instructions)),
-            'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients'))
+            'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients')),
         ];
     }
 }

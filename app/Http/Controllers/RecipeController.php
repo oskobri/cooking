@@ -8,15 +8,20 @@ use App\Http\Resources\RecipeResource;
 use App\Models\Recipe;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Gate;
 
 class RecipeController extends Controller
 {
     public function index(RecipeIndexRequest $request): AnonymousResourceCollection
     {
         $recipes = Recipe::query()
-            ->select(['id', 'name', 'picture', 'preparation_time', 'total_time', 'kcal'])
+            ->accessible()
+            ->select(['id', 'name', 'picture', 'preparation_time', 'total_time', 'kcal', 'public', 'published'])
             ->with(['ingredients'])
-            ->orderBy($request->input('sort', 'id'), $request->input('sort_direction', 'asc'))
+            ->orderBy(
+                $request->input('sort', $request->defaultSort()),
+                $request->input('sort_direction', $request->defaultSortDirection())
+            )
             ->paginate();
 
         return RecipeResource::collection($recipes);
@@ -24,6 +29,8 @@ class RecipeController extends Controller
 
     public function show(Recipe $recipe): RecipeResource
     {
+        Gate::authorize('view', $recipe);
+
         $recipe->load(['ingredients']);
 
         return RecipeResource::make($recipe);
@@ -36,8 +43,10 @@ class RecipeController extends Controller
         return RecipeResource::make($recipe);
     }
 
-    public function update(RecipeStoreRequest $request, Recipe $recipe)
+    public function update(RecipeStoreRequest $request, Recipe $recipe): RecipeResource
     {
+        Gate::authorize('update', $recipe);
+
         $recipe->update($request->validated());
 
         return RecipeResource::make($recipe);
@@ -45,6 +54,8 @@ class RecipeController extends Controller
 
     public function destroy(Recipe $recipe): JsonResponse
     {
+        Gate::authorize('delete', $recipe);
+
         $recipe->delete();
 
         return response()->json(null, 204);

@@ -14,4 +14,17 @@ class RecipeIndexRequest extends FormRequest
             'sort_direction' => ['nullable', 'in:asc,desc'],
         ];
     }
+
+    public function defaultSort(): string
+    {
+        return 'created_at';
+    }
+
+    public function defaultSortDirection(): string
+    {
+        return match($this->input('sort', $this->defaultSort())) {
+            'created_at' => 'desc',
+            default => 'asc',
+        };
+    }
 }
