@@ -2,6 +2,7 @@
 
 use App\Actions\AuthenticateWithToken;
 use App\Http\Controllers\GroceryListController;
+use App\Http\Controllers\GroceryListRecipeController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RecipeFavoriteController;
 use App\Http\Controllers\RecipeGuestController;
@@ -27,6 +28,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
     Route::get('/grocery-lists/last', [GroceryListController::class, 'last']);
     Route::resource('/grocery-lists', GroceryListController::class);
+    Route::put('/grocery-lists/{grocery_list}/recipes/{recipe}', [GroceryListRecipeController::class, 'update'])->scopeBindings();
 
     // TODO later
     //Route::post('/recipes/{recipe}/ingredients/{ingredient?}', [IngredientRecipeController::class, 'store']);

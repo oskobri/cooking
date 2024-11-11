@@ -31,6 +31,9 @@ class RecipeResource extends JsonResource
             'ratingsCount' => $this->whenCounted('ratings', $this->ratings_count),
             'instructions' => $this->when($this->instructions, nl2br($this->instructions)),
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients')),
+
+            // Pivots
+            'groceryListDone' => $this->whenPivotLoaded('grocery_list_recipe', fn () => $this->pivot->done),
         ];
     }
 }

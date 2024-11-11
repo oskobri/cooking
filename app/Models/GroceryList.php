@@ -18,6 +18,7 @@ class GroceryList extends Model
 
     public function recipes(): BelongsToMany
     {
-        return $this->belongsToMany(Recipe::class);
+        return $this->belongsToMany(Recipe::class)
+            ->withPivot('done');
     }
 }

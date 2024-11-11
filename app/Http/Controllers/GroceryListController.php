@@ -6,6 +6,7 @@ use App\Http\Requests\GroceryListStoreRequest;
 use App\Http\Requests\GroceryListUpdateRequest;
 use App\Http\Resources\GroceryListResource;
 use App\Models\GroceryList;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -18,7 +19,11 @@ class GroceryListController extends Controller
     {
         $groceryLists = auth()->user()
             ->groceryLists()
-            ->with(['recipes:id,name,picture,preparation_time,total_time,kcal'])
+            ->with([
+                'recipes' => fn ($query) => $query
+                    ->select('recipes.id', 'name', 'picture', 'preparation_time', 'total_time', 'kcal')
+                    ->orderByPivot('done')
+            ])
             ->latest()
             ->paginate();
 
@@ -30,10 +35,7 @@ class GroceryListController extends Controller
      */
     public function last(): GroceryListResource
     {
-        throw_if(
-            is_null(auth()->user()->latestGroceryList),
-            ModelNotFoundException::class
-        );
+        throw_if(is_null(auth()->user()->latestGroceryList), ModelNotFoundException::class);
 
         return GroceryListResource::make(
             auth()->user()->latestGroceryList
@@ -44,7 +46,15 @@ class GroceryListController extends Controller
     {
         Gate::authorize('view', $groceryList);
 
-        return GroceryListResource::make($groceryList->load('recipes.ingredients'));
+        $groceryList
+            ->load([
+                'recipes' => fn ($query) => $query
+                    ->select('recipes.id', 'name', 'picture', 'preparation_time', 'total_time', 'kcal')
+                    ->orderByPivot('done'),
+                'recipes.ingredients'
+            ]);
+
+        return GroceryListResource::make($groceryList);
     }
 
     public function store(GroceryListStoreRequest $request): GroceryListResource
