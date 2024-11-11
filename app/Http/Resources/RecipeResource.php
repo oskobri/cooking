@@ -25,6 +25,7 @@ class RecipeResource extends JsonResource
             'preparationTime' => $this->when($this->preparation_time, $this->preparation_time),
             'totalTime' => $this->when($this->total_time, $this->total_time),
             'kcal' => $this->when($this->kcal, $this->kcal),
+            'favorite' => $this->when('users_who_favorited_exists', $this->users_who_favorited_exists),
             'rating' => $this->whenLoaded('userRating', fn () => $this->userRating->rating),
             'avgRating' => $this->when('ratings_avg_rating', $this->ratings_avg_rating),
             'ratingsCount' => $this->whenCounted('ratings', $this->ratings_count),

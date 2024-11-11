@@ -15,6 +15,6 @@ class RecipeRatingController extends Controller
             $request->safe(['rating'])
         );
 
-        return response()->json(null);
+        return response()->json();
     }
 }

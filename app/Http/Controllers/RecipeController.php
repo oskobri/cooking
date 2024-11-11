@@ -19,6 +19,7 @@ class RecipeController extends Controller
             ->with(['ingredients', 'userRating'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
+            ->withExists(['usersWhoFavorited' => fn ($query) => $query->where('users.id', auth()->id())])
             ->accessible()
             ->search($request->input('search'))
             ->orderBy($request->sort(), $request->sortDirection())
@@ -34,7 +35,8 @@ class RecipeController extends Controller
         $recipe
             ->load(['ingredients', 'userRating'])
             ->loadAvg('ratings', 'rating')
-            ->loadCount('ratings');
+            ->loadCount('ratings')
+            ->loadExists(['usersWhoFavorited' => fn ($query) => $query->where('users.id', auth()->id())]);
 
         return RecipeResource::make($recipe);
     }

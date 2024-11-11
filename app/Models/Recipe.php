@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 
 class Recipe extends Model
 {
@@ -39,8 +38,12 @@ class Recipe extends Model
 
     public function userRating(): HasOne
     {
-        return $this->hasOne(RecipeRating::class)
-            ->whereBelongsTo(auth()->user());
+        return $this->hasOne(RecipeRating::class)->whereBelongsTo(auth()->user());
+    }
+
+    public function usersWhoFavorited(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'recipe_favorites');
     }
 
     public function scopeAccessible(Builder $query): Builder

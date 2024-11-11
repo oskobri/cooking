@@ -3,6 +3,7 @@
 use App\Actions\AuthenticateWithToken;
 use App\Http\Controllers\GroceryListController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\RecipeFavoriteController;
 use App\Http\Controllers\RecipeGuestController;
 use App\Http\Controllers\RecipeRatingController;
 use App\Http\Controllers\UserController;
@@ -22,6 +23,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::resource('/recipes', RecipeController::class);
 
     Route::post('/recipes/{recipe}/ratings', [RecipeRatingController::class, 'rate']);
+    Route::post('/recipes/{recipe}/favorites', RecipeFavoriteController::class);
 
     Route::get('/grocery-lists/last', [GroceryListController::class, 'last']);
     Route::resource('/grocery-lists', GroceryListController::class);
