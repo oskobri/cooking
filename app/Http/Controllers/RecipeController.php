@@ -15,14 +15,15 @@ class RecipeController extends Controller
     public function index(RecipeIndexRequest $request): AnonymousResourceCollection
     {
         $recipes = Recipe::query()
-            ->accessible()
             ->select(['id', 'name', 'picture', 'preparation_time', 'total_time', 'kcal', 'public', 'published'])
             ->with(['ingredients', 'userRating'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
+            ->accessible()
+            ->search($request->input('search'))
             ->orderBy(
-                $request->input('sort', $request->defaultSort()),
-                $request->input('sort_direction', $request->defaultSortDirection())
+                $request->sort(),
+                $request->sortDirection()
             )
             ->paginate();
 

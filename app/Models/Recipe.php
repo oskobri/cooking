@@ -53,4 +53,16 @@ class Recipe extends Model
                 )
             );
     }
+
+    public function scopeSearch(Builder $query, string $search = null): Builder
+    {
+        return $query->when($search, fn (Builder $query) => $query
+            ->where(fn (Builder $query) => $query
+                ->where('name', 'like', '%' . $search . '%')
+                ->orWhereHas('ingredients', fn (Builder $query) => $query
+                    ->where('name', 'like', '%' . $search . '%')
+                )
+            )
+        );
+    }
 }
