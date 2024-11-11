@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Recipe extends Model
 {
@@ -57,12 +58,26 @@ class Recipe extends Model
     public function scopeSearch(Builder $query, string $search = null): Builder
     {
         return $query->when($search, fn (Builder $query) => $query
-            ->where(fn (Builder $query) => $query
-                ->where('name', 'like', '%' . $search . '%')
-                ->orWhereHas('ingredients', fn (Builder $query) => $query
-                    ->where('name', 'like', '%' . $search . '%')
-                )
+            ->selectRaw(
+                "(CASE
+                    WHEN recipes.name = ? THEN 1
+                    WHEN EXISTS (
+                        SELECT 1
+                        FROM ingredient_recipe
+                        JOIN ingredients ON ingredients.id = ingredient_recipe.ingredient_id
+                        WHERE ingredient_recipe.recipe_id = recipes.id
+                          AND ingredients.name = ?
+                    ) THEN 1
+                    ELSE 0
+                  END) as exact_match", [$search, $search]
             )
+                ->where(fn (Builder $query) => $query
+                    ->where('name', 'like', '%' . $search . '%')
+                    ->orWhereHas('ingredients', fn (Builder $query) => $query
+                        ->where('name', 'like', '%' . $search . '%')
+                    )
+                )
+                ->orderByDesc('exact_match')
         );
     }
 }

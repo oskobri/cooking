@@ -10,6 +10,7 @@ return new class extends Migration {
         Schema::table('recipes', function (Blueprint $table) {
             // Composite index for filtering
             $table->index(['published', 'public', 'user_id', 'deleted_at'], 'recipes_filters_index');
+            $table->index(['published', 'public', 'user_id', 'deleted_at'], 'recipes_filters_index');
 
             // Index for sorting
             $table->index(['published', 'public', 'user_id', 'deleted_at', 'created_at'], 'recipes_sort_by_created_at_index');

@@ -21,10 +21,7 @@ class RecipeController extends Controller
             ->withCount('ratings')
             ->accessible()
             ->search($request->input('search'))
-            ->orderBy(
-                $request->sort(),
-                $request->sortDirection()
-            )
+            ->orderBy($request->sort(), $request->sortDirection())
             ->paginate();
 
         return RecipeResource::collection($recipes);
