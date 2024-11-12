@@ -9,6 +9,7 @@
         "filament/filament": "^3.2",
         "laravel/fortify": "^1.24",
         "laravel/framework": "^11.9",
+        "laravel/pulse": "^1.2",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "openai-php/laravel": "^0.10.1",

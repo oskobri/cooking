@@ -55,6 +55,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->email === config('filament.admin') && $this->hasVerifiedEmail();
     }
 
+    public function canAccessPulse(): bool
+    {
+        return $this->email === config('filament.admin') && $this->hasVerifiedEmail();
+    }
+
     public function groceryLists(): HasMany
     {
         return $this->hasMany(GroceryList::class);
