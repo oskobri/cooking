@@ -1,6 +1,24 @@
 
 
-# Services
+# Server configuration
+
+## Nginx
+TODO
+
+## PHP
+TODO
+
+## MySQL
+TODO
+
+## Laravel
+
+### Crontab
+```bash
+crontab -e 
+
+* * * * * cd /<project_path> && php artisan schedule:run >> /dev/null 2>&1
+```
 
 ## Laravel Pulse
 
