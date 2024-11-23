@@ -25,11 +25,15 @@ class RecipeResource extends JsonResource
             'preparationTime' => $this->when($this->preparation_time, $this->preparation_time),
             'totalTime' => $this->when($this->total_time, $this->total_time),
             'kcal' => $this->when($this->kcal, $this->kcal),
-            'favorite' => $this->when('users_who_favorited_exists', $this->users_who_favorited_exists),
+            'favorite' => $this->when($this->hasAttribute('users_who_favorited_exists') , $this->users_who_favorited_exists),
             'rating' => $this->whenLoaded('userRating', fn () => $this->userRating->rating),
-            'avgRating' => $this->when('ratings_avg_rating', $this->ratings_avg_rating),
+            'avgRating' => $this->when($this->ratings_avg_rating , function() {
+                return $this->ratings_avg_rating !== floor($this->ratings_avg_rating)
+                    ? round($this->ratings_avg_rating, 1)
+                    : floor($this->ratings_avg_rating);
+            }),
             'ratingsCount' => $this->whenCounted('ratings', $this->ratings_count),
-            'instructions' => $this->when($this->instructions, nl2br($this->instructions)),
+            'instructions' => $this->when($this->instructions, fn() => nl2br($this->instructions)),
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients')),
 
             // Pivots
