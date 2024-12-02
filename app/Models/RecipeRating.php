@@ -12,8 +12,6 @@ class RecipeRating extends Model
     use HasFactory;
     use BelongsToUser;
 
-    protected $guarded = [];
-
     public function recipe(): BelongsTo
     {
         return $this->belongsTo(Recipe::class);

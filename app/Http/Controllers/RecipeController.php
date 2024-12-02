@@ -16,7 +16,7 @@ class RecipeController extends Controller
     {
         $recipes = Recipe::query()
             ->select(['id', 'name', 'picture', 'preparation_time', 'total_time', 'kcal', 'public', 'published'])
-            ->with(['ingredients', 'userRating'])
+            ->with(['userRating'])
             ->withAvg('ratings', 'rating')
             ->withCount('ratings')
             ->withExists(['usersWhoFavorited' => fn ($query) => $query->where('users.id', auth()->id())])

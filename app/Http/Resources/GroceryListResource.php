@@ -17,7 +17,8 @@ class GroceryListResource extends JsonResource
             'id' => $this->getKey(),
             'name' => $this->name,
             'servingCount' => $this->serving_count,
-            'recipes' => RecipeResource::collection($this->whenLoaded('recipes'))
+            'recipes' => RecipeResource::collection($this->whenLoaded('recipes')),
+            'recipeUpdatedAt' => $this->recipe_updated_at,
         ];
     }
 }

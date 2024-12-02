@@ -18,8 +18,6 @@ class Recipe extends Model
     use SoftDeletes;
     use BelongsToUser;
 
-    protected $guarded = [];
-
     protected $casts = [
         'source' => RecipeSource::class,
     ];

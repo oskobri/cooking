@@ -12,8 +12,6 @@ class Ingredient extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $guarded = [];
-
     public function recipes(): BelongsToMany
     {
         return $this->belongsToMany(Recipe::class)

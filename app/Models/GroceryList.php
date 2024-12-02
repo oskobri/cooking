@@ -14,7 +14,12 @@ class GroceryList extends Model
     use SoftDeletes;
     use BelongsToUser;
 
-    protected $guarded = [];
+    protected function casts(): array
+    {
+        return [
+            'recipe_updated_at' => 'datetime'
+        ];
+    }
 
     public function recipes(): BelongsToMany
     {
